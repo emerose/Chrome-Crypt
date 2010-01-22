@@ -14,7 +14,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "BasicPlugin.h"
+#include "ChromeCrypt.h"
 
 // structure containing pointers to functions implemented by the browser
 static NPNetscapeFuncs* browser;
