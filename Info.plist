@@ -11,22 +11,22 @@
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>CFBundleIdentifier</key>
-	<string>org.mozilla.basicPlugin</string>
+	<string>com.emerose.chromeCrypt</string>
 	<key>CFBundleName</key>
 	<string>${PRODUCT_NAME}</string>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>WebPluginMIMETypes</key>
 	<dict>
-		<key>application/basic-plugin</key>
+		<key>application/chrome-crypt</key>
 		<dict>
 			<key>WebPluginTypeDescription</key>
-			<string>Basic plugin sample</string>
+			<string>Keychain and encryption plugin for Chrome</string>
 		</dict>
 	</dict>
 	<key>WebPluginDescription</key>
-	<string>Basic plugin sample, part of the Gecko NPAPI SDK</string>
+	<string>Keychain and encryption plugin for Chrome</string>
 	<key>WebPluginName</key>
-	<string>Basic Plugin Sample</string>
+	<string>Chrome Crypt</string>
 </dict>
 </plist>
