@@ -8,6 +8,8 @@
 
 #include "ChromeCrypt.h"
 
+static NPObject scriptObject;
+
 /**
  * Called once (before NP_Initialize?) in order to set up pointers required for
  * most other function calls.
@@ -43,6 +45,37 @@ NPError NPP_New(NPMIMEType pluginType, // ptr to MIME type for plugin instance
                 NPSavedData* saved)    // prev saved instance data (?)
 {
   return NPERR_NO_ERROR;
+}
+
+/**
+ * Called by the browser to retrieve instance variables from the plugin 
+ */
+NPError NPP_GetValue(NPP instance,         // the instance
+                     NPPVariable variable, // the variable to retrieve
+                     void *value)          // where to put the value (?)
+{
+  switch(variable) {
+    case NPPVpluginNameString:
+      *((char **)value) = PLUGIN_NAME;
+      return NPERR_NO_ERROR;
+
+    case NPPVpluginDescriptionString:
+      *((char **)value) = PLUGIN_DESC;
+      return NPERR_NO_ERROR;
+
+    case NPPVpluginScriptableNPObject:// Scriptable plugin interface (for accessing from javascript)
+/*      *((NPObject **)value) = &scriptObject;
+      return NPERR_NO_ERROR;
+*/
+      return NPERR_GENERIC_ERROR;
+
+    case NPPVpluginWindowBool:
+      *((bool **)value) = FALSE;
+      return NPERR_NO_ERROR;
+
+    default:
+      return NPERR_GENERIC_ERROR;
+  }
 }
 
 /**
