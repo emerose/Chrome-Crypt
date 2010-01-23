@@ -8,7 +8,19 @@
 
 #include "ChromeCrypt.h"
 
+
 static NPNetscapeFuncs *browser; // we store the browser function table here for future use
+
+void LOG_DEBUG(const char *msg)
+{
+  FILE *file = fopen("/tmp/cc.log", "a+");
+	if (file) {
+		fprintf(file, "%s\n", msg);
+		fclose(file);
+  } else {
+    abort();
+  }
+}
 
 /**
  * Called once (before NP_Initialize?) in order to set up pointers required for
@@ -18,6 +30,8 @@ static NPNetscapeFuncs *browser; // we store the browser function table here for
  */
 NPError NP_GetEntryPoints(NPPluginFuncs* pluginFuncs)
 {
+  LOG_DEBUG("NP_GetEntryPoints");
+  
   pluginFuncs->version  = (NP_VERSION_MAJOR << 8) | NP_VERSION_MINOR;
   pluginFuncs->newp     = NPP_New;
   pluginFuncs->destroy  = NPP_Destroy;
@@ -30,6 +44,8 @@ NPError NP_GetEntryPoints(NPPluginFuncs* pluginFuncs)
  */
 NPError NP_Initialize(NPNetscapeFuncs* browserFuncs)
 {  
+  LOG_DEBUG("NP_Initialize");
+
   browser = browserFuncs;
   return NPERR_NO_ERROR;
 }
@@ -45,6 +61,8 @@ NPError NPP_New(NPMIMEType pluginType, // ptr to MIME type for plugin instance
                 char* argv[],          // EMBED tag attribute values
                 NPSavedData* saved)    // prev saved instance data (?)
 {
+  LOG_DEBUG("NPP_New");
+  
   return NPERR_NO_ERROR;
 }
 
@@ -55,6 +73,8 @@ NPError NPP_GetValue(NPP instance,         // the instance
                      NPPVariable variable, // the variable to retrieve
                      void *value)          // where to put the value (?)
 {
+  LOG_DEBUG("NPP_GetValue");
+  
   switch(variable) {
     case NPPVpluginNameString:
       *((char **)value) = PLUGIN_NAME;
@@ -82,6 +102,8 @@ NPError NPP_GetValue(NPP instance,         // the instance
  */
 NPError NPP_Destroy(NPP instance, NPSavedData** save)
 {
+  LOG_DEBUG("NPP_Destroy");
+  
   return NPERR_NO_ERROR;
 }
 
@@ -90,6 +112,8 @@ NPError NPP_Destroy(NPP instance, NPSavedData** save)
  */
 void NP_Shutdown(void)
 {
+  LOG_DEBUG("NP_Shutdown");
+  
   return;
 }
 
@@ -100,6 +124,8 @@ void NP_Shutdown(void)
  */
 NPObject *newScriptObject(NPP instance)
 {
+  LOG_DEBUG("newScriptObject");
+  
     // first, we allocate and zero an NPClass struct
   NPClass *class = malloc(sizeof(NPClass));
   memset(class, 0, sizeof(NPClass));
@@ -117,18 +143,30 @@ NPObject *newScriptObject(NPP instance)
   return browser->createobject(instance, class);
 }
 
+/**
+ * returns true if the object +npobj+ has the method +name+
+ */
 bool scriptHasMethod(NPObject *npobj, NPIdentifier name)
 {
-  return false;
+  LOG_DEBUG("scriptHasMethod");
+  
+  return true; // pretend we have all methods
 }
 
+/**
+ * invoke method +name+ on +npobh+ with +argCount+ arguments specified
+ * in array +args+; return the result in +result+
+ */
 bool scriptInvokeMethod(NPObject *npobj,
                         NPIdentifier name,
                         const NPVariant *args,
                         uint32_t argCount,
                         NPVariant *result)
 {
-  return false;
+  LOG_DEBUG("scriptInvokeMethod");
+  
+  STRINGZ_TO_NPVARIANT("HELLO", *result);
+  return true;
 }
 
 bool scriptInvokeDefaultMethod(NPObject *npobj,
@@ -136,26 +174,38 @@ bool scriptInvokeDefaultMethod(NPObject *npobj,
                                uint32_t argCount,
                                NPVariant *result)
 {
-  return false;
+  LOG_DEBUG("scriptInvokeDefaultMethod");
+  
+  STRINGZ_TO_NPVARIANT("HELLO", *result);
+  return true;
 }
 
 bool scriptHasProperty(NPObject *npobj, NPIdentifier name)
 {
-  return false;
+  LOG_DEBUG("scriptHasProperty");
+  
+  return true;
 }
 
 bool scriptGetProperty(NPObject *npobj, NPIdentifier name, NPVariant *result)
 {
-  return false;
+  LOG_DEBUG("scriptGetProperty");
+  
+  STRINGZ_TO_NPVARIANT("HELLO", *result);
+  return true;
 }
 
 bool scriptSetProperty(NPObject *npobj, NPIdentifier name, const NPVariant *value)
 {
-  return false;
+  LOG_DEBUG("scriptSetProperty");
+  
+  return true;
 }
 
 bool scriptRemoveProperty(NPObject *npobj, NPIdentifier name)
 {
-  return false;
+  LOG_DEBUG("scriptRemoveProperty");
+  
+  return true;
 }
 

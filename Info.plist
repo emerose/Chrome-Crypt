@@ -28,5 +28,7 @@
 	<string>Keychain and encryption plugin for Chrome</string>
 	<key>WebPluginName</key>
 	<string>Chrome Crypt</string>
+	<key>NSPrincipalClass</key>
+	<string>InternetPlugin</string>
 </dict>
 </plist>

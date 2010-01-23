@@ -1,16 +1,16 @@
 {
 	"name": "ChromeCrypt",
-	"version": "0.0.1",
+	"version": "0.0.3",
 	"description": "Crypto Plugin for Chrome",
+
+  "browser_action": { 
+    "default_icon": "icon.png",
+    "popup": "popup.html"
+  },
 	
-	"content_scripts": [{
-		"matches": ["http://*/*", "https://*/*"],
-		"js": ["jquery-1.4.min.js"]
-	}],	
-	
-	"plugins": [{ 
-		"path": "ChromeCrypt.bundle" 
-	}],
+	"plugins": [ 
+    { "path": "ChromeCrypt.plugin", "public": true }
+	],
 
 	"background_page": "background.html",
 	
