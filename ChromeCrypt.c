@@ -209,3 +209,7 @@ bool scriptRemoveProperty(NPObject *npobj, NPIdentifier name)
   return true;
 }
 
+char* NP_GetMIMEDescription(void)
+{
+  return(MIME_TYPES_DESCRIPTION);
+}

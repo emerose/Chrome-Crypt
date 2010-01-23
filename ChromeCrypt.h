@@ -12,6 +12,7 @@
 
 #define PLUGIN_NAME "ChromeCrypt"
 #define PLUGIN_DESC "Encryption thingy for Chrome"
+#define MIME_TYPES_DESCRIPTION "application/x-chromecrypt:ccrypt:Cypto Plugin for Chrome"
 
 NPError NP_GetEntryPoints(NPPluginFuncs *pluginFuncs);
 NPError NP_Initialize(NPNetscapeFuncs *browserFuncs);
