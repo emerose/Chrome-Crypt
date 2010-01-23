@@ -211,5 +211,7 @@ bool scriptRemoveProperty(NPObject *npobj, NPIdentifier name)
 
 char* NP_GetMIMEDescription(void)
 {
+  LOG_DEBUG("NP_GetMIMEDescription");
+
   return(MIME_TYPES_DESCRIPTION);
 }
