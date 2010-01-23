@@ -18,7 +18,7 @@
 	<string>${EXECUTABLE_NAME}</string>
 	<key>WebPluginMIMETypes</key>
 	<dict>
-		<key>application/chrome-crypt</key>
+		<key>application/x-chromecrypt</key>
 		<dict>
 			<key>WebPluginTypeDescription</key>
 			<string>Keychain and encryption plugin for Chrome</string>
