@@ -16,11 +16,8 @@
 
 NPError NP_GetEntryPoints(NPPluginFuncs *pluginFuncs);
 NPError NP_Initialize(NPNetscapeFuncs *browserFuncs);
-NPError NPP_New(NPMIMEType pluginType, NPP instance, uint16_t mode, int16_t argc, char* argn[], char* argv[], NPSavedData* saved);
-NPError NPP_GetValue(NPP instance, NPPVariable variable, void *value);
-NPError NPP_Destroy(NPP instance, NPSavedData** save);
-void    NP_Shutdown(void);
 
+  // declarations for NPP_* are in include/plugin/npapi.h
 
 NPObject *newScriptObject(NPP instance);
 bool scriptHasMethod(NPObject *npobj, NPIdentifier name);

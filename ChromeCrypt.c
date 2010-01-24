@@ -8,6 +8,10 @@
 
 #include "ChromeCrypt.h"
 
+#ifndef HIBYTE
+#define HIBYTE(x) ((((uint32)(x)) & 0xff00) >> 8)
+#endif
+
 
 static NPNetscapeFuncs *browser; // we store the browser function table here for future use
 
@@ -42,10 +46,21 @@ NPError NP_GetEntryPoints(NPPluginFuncs* pluginFuncs)
     return NPERR_INVALID_FUNCTABLE_ERROR;
   }
   
-  
-  pluginFuncs->version  = (NP_VERSION_MAJOR << 8) | NP_VERSION_MINOR;
-  pluginFuncs->newp     = NPP_New;
-  pluginFuncs->destroy  = NPP_Destroy;
+  pluginFuncs->version       = (NP_VERSION_MAJOR << 8) | NP_VERSION_MINOR;
+  pluginFuncs->newp          = NPP_New;
+  pluginFuncs->destroy       = NPP_Destroy;
+  pluginFuncs->setwindow     = NPP_SetWindow;
+  pluginFuncs->newstream     = NPP_NewStream;
+  pluginFuncs->destroystream = NPP_DestroyStream;
+  pluginFuncs->asfile        = NPP_StreamAsFile;
+  pluginFuncs->writeready    = NPP_WriteReady;
+  pluginFuncs->write         = NPP_Write;
+  pluginFuncs->print         = NPP_Print;
+  pluginFuncs->event         = NPP_HandleEvent;
+  pluginFuncs->urlnotify     = NPP_URLNotify;
+  pluginFuncs->getvalue      = NPP_GetValue;
+  pluginFuncs->setvalue      = NPP_SetValue;
+  pluginFuncs->javaClass     = NULL;
   
   return NPERR_NO_ERROR;
 }
@@ -57,7 +72,7 @@ NPError NP_Initialize(NPNetscapeFuncs* browserFuncs)
 {  
   LOG_DEBUG("NP_Initialize");
 
-  if (((browserFuncs->version) >> 8) > NP_VERSION_MAJOR) {
+  if (HIBYTE(browserFuncs->version) > NP_VERSION_MAJOR) {
     LOG_DEBUG("Wrong API Version!");
     return NPERR_INCOMPATIBLE_VERSION_ERROR;    
   }
@@ -69,17 +84,6 @@ NPError NP_Initialize(NPNetscapeFuncs* browserFuncs)
   
   browser = browserFuncs;
   return NPERR_NO_ERROR;
-}
-
-/**
- * Not really sure when this is called — or even *if* it's called — but its
- * existence seems to be very important.
- */
-char* NP_GetMIMEDescription(void)
-{
-  LOG_DEBUG("NP_GetMIMEDescription");
-  
-  return(MIME_TYPES_DESCRIPTION);
 }
 
 /**
@@ -101,9 +105,9 @@ NPError NPP_New(NPMIMEType pluginType, // ptr to MIME type for plugin instance
 /**
  * Called by the browser to retrieve instance variables from the plugin 
  */
-NPError NPP_GetValue(NPP instance,         // the instance
-                     NPPVariable variable, // the variable to retrieve
-                     void *value)          // where to put the value (?)
+NPError NPP_GetValue(NPP instance,
+                     NPPVariable variable,
+                     void *value)
 {
   LOG_DEBUG("NPP_GetValue");
   
@@ -130,6 +134,19 @@ NPError NPP_GetValue(NPP instance,         // the instance
 }
 
 /**
+ * Called by the browser to retrieve instance variables from the plugin 
+ */
+NPError NPP_SetValue(NPP instance,         // the instance
+                     NPNVariable variable, // the variable to retrieve
+                     void *value)          // where to put the value (?)
+{
+  LOG_DEBUG("NPP_SetValue");
+
+  return NPERR_GENERIC_ERROR;
+}
+
+
+/**
  * Called to destroy an instance of the plugin
  */
 NPError NPP_Destroy(NPP instance, NPSavedData** save)
@@ -148,6 +165,123 @@ void NP_Shutdown(void)
   
   return;
 }
+
+/**
+ * Not really sure when this is called — or even *if* it's called — but its
+ * existence seems to be very important.
+ */
+char* NP_GetMIMEDescription(void)
+{
+  LOG_DEBUG("NP_GetMIMEDescription");
+  
+  return(MIME_TYPES_DESCRIPTION);
+}
+
+/**
+ * Called when a window is created, moved, sized, or destroyed.
+ */
+NPError NPP_SetWindow(NPP instance, NPWindow *window)
+{
+  LOG_DEBUG("NPP_SetWindow");
+  
+  return NPERR_NO_ERROR;
+}
+
+/**
+ * Called to notify plugin of a new data stream
+ */
+NPError NPP_NewStream(NPP        instance, 
+                      NPMIMEType type,
+                      NPStream*  stream,
+                      NPBool     seekable,
+                      uint16*    stype)
+{
+  LOG_DEBUG("NPP_NewStream");
+  
+  return NPERR_NO_ERROR;  
+}
+
+/**
+ * Called to notify plugin when a stream is about to be closed
+ */
+NPError NPP_DestroyStream(NPP       instance, 
+                          NPStream* stream, 
+                          NPReason  reason)
+{
+  LOG_DEBUG("NPP_DestroyStream");
+  
+  return NPERR_NO_ERROR;
+}
+
+/**
+ * "Provides a local file name for the data from a stream," whatever that means
+ */
+void NPP_StreamAsFile(NPP         instance,
+                      NPStream*   stream,
+                      const char* fname)
+{
+  LOG_DEBUG("NPP_StreamAsFile");
+  
+  return;
+}
+
+/**
+ * Returns max number of bytes that plugin can consume
+ */
+int32_t NPP_WriteReady(NPP instance, NPStream* stream)
+{
+  LOG_DEBUG("NPP_WriteReady");
+  
+  return 0;
+}
+
+/**
+ * Delivers data to a plugin
+ */
+int32_t NPP_Write(NPP instance, 
+                NPStream* stream,
+                int32_t offset, 
+                int32_t len, 
+                void* buf)
+{
+  LOG_DEBUG("NPP_Write");
+  
+  return len;
+}
+
+/**
+ * Asks plugin to print itself 
+ */
+void NPP_Print(NPP instance, NPPrint* PrintInfo)
+{
+  LOG_DEBUG("NPP_Print");
+  
+  return;
+}
+
+/**
+ * Delivers window event to plugin
+ */
+int16_t NPP_HandleEvent(NPP instance, void* event)
+{
+  LOG_DEBUG("NPP_HandleEvent");
+  
+  return FALSE;
+}
+
+/**
+ * Notifies plugin that URL request has completed
+ */
+void NPP_URLNotify(NPP         instance, 
+                   const char* url,
+                   NPReason    reason, 
+                   void*       notifyData)
+{
+  LOG_DEBUG("NPP_URLNotify");
+  
+  return;
+}
+
 
 /**********************/
 
