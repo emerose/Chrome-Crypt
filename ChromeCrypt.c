@@ -51,6 +51,17 @@ NPError NP_Initialize(NPNetscapeFuncs* browserFuncs)
 }
 
 /**
+ * Not really sure when this is called — or even *if* it's called — but its
+ * existence seems to be very important.
+ */
+char* NP_GetMIMEDescription(void)
+{
+  LOG_DEBUG("NP_GetMIMEDescription");
+  
+  return(MIME_TYPES_DESCRIPTION);
+}
+
+/**
  * Called to create a new instance of the plugin
  */
 NPError NPP_New(NPMIMEType pluginType, // ptr to MIME type for plugin instance
@@ -209,9 +220,3 @@ bool scriptRemoveProperty(NPObject *npobj, NPIdentifier name)
   return true;
 }
 
-char* NP_GetMIMEDescription(void)
-{
-  LOG_DEBUG("NP_GetMIMEDescription");
-
-  return(MIME_TYPES_DESCRIPTION);
-}
