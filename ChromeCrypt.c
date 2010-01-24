@@ -31,6 +31,17 @@ void LOG_DEBUG(const char *msg)
 NPError NP_GetEntryPoints(NPPluginFuncs* pluginFuncs)
 {
   LOG_DEBUG("NP_GetEntryPoints");
+ 
+  if (pluginFuncs== NULL) {
+    LOG_DEBUG("pluginFuncs is NULL!");
+    return NPERR_INVALID_FUNCTABLE_ERROR;
+  }
+  
+  if (pluginFuncs->size < sizeof(NPPluginFuncs)) {
+    LOG_DEBUG("pluginFuncs has wrong size!");
+    return NPERR_INVALID_FUNCTABLE_ERROR;
+  }
+  
   
   pluginFuncs->version  = (NP_VERSION_MAJOR << 8) | NP_VERSION_MINOR;
   pluginFuncs->newp     = NPP_New;
