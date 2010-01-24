@@ -46,6 +46,16 @@ NPError NP_Initialize(NPNetscapeFuncs* browserFuncs)
 {  
   LOG_DEBUG("NP_Initialize");
 
+  if (((browserFuncs->version) >> 8) > NP_VERSION_MAJOR) {
+    LOG_DEBUG("Wrong API Version!");
+    return NPERR_INCOMPATIBLE_VERSION_ERROR;    
+  }
+
+  if (browserFuncs->size < sizeof(NPNetscapeFuncs)) {
+    LOG_DEBUG("browserFuncs has wrong size!");
+    return NPERR_INVALID_FUNCTABLE_ERROR;    
+  }
+  
   browser = browserFuncs;
   return NPERR_NO_ERROR;
 }
