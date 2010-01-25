@@ -274,7 +274,7 @@ void NPP_URLNotify(NPP         instance,
  */
 NPObject *newScriptObject(NPP instance)
 {
-  DEBUG_LOG(DEBUG_INFO, "newScriptObject");
+  DEBUG_LOG(DEBUG_TRACE, "newScriptObject");
   
     // first, we allocate and zero an NPClass struct
   NPClass *class = malloc(sizeof(NPClass));
@@ -298,7 +298,7 @@ NPObject *newScriptObject(NPP instance)
  */
 bool scriptHasMethod(NPObject *npobj, NPIdentifier name)
 {
-  DEBUG_LOG(DEBUG_INFO, "scriptHasMethod");
+  DEBUG_LOG(DEBUG_TRACE, "scriptHasMethod");
   
   
   
@@ -315,7 +315,7 @@ bool scriptInvokeMethod(NPObject *npobj,
                         uint32_t argCount,
                         NPVariant *result)
 {
-  DEBUG_LOG(DEBUG_INFO, "scriptInvokeMethod");
+  DEBUG_LOG(DEBUG_TRACE, "scriptInvokeMethod");
   
   STRINGZ_TO_NPVARIANT("HELLO", *result);
   return true;
@@ -326,7 +326,7 @@ bool scriptInvokeDefaultMethod(NPObject *npobj,
                                uint32_t argCount,
                                NPVariant *result)
 {
-  DEBUG_LOG(DEBUG_INFO, "scriptInvokeDefaultMethod");
+  DEBUG_LOG(DEBUG_TRACE, "scriptInvokeDefaultMethod");
   
   STRINGZ_TO_NPVARIANT("HELLO", *result);
   return true;
@@ -334,14 +334,32 @@ bool scriptInvokeDefaultMethod(NPObject *npobj,
 
 bool scriptHasProperty(NPObject *npobj, NPIdentifier name)
 {
-  DEBUG_LOG(DEBUG_INFO, "scriptHasProperty");
+  DEBUG_LOG(DEBUG_TRACE, "scriptHasProperty");
+  if (browser->identifierisstring(name)) {
+    char *name_string = browser->utf8fromidentifier(name);
+    DEBUG_LOG(DEBUG_INFO, "name is:");
+    DEBUG_LOG(DEBUG_INFO, name_string);
+    browser->memfree(name_string);
+  }
+  else {
+    DEBUG_LOG(DEBUG_INFO, "name is not a string");
+  }
   
   return true;
 }
 
 bool scriptGetProperty(NPObject *npobj, NPIdentifier name, NPVariant *result)
 {
-  DEBUG_LOG(DEBUG_INFO, "scriptGetProperty");
+  DEBUG_LOG(DEBUG_TRACE, "scriptGetProperty");
+  if (browser->identifierisstring(name)) {
+    char *name_string = browser->utf8fromidentifier(name);
+    DEBUG_LOG(DEBUG_INFO, "name is:");
+    DEBUG_LOG(DEBUG_INFO, name_string);
+    browser->memfree(name_string);
+  }
+  else {
+    DEBUG_LOG(DEBUG_INFO, "name is not a string");
+  }  
   
   STRINGZ_TO_NPVARIANT("HELLO", *result);
   return true;
@@ -349,14 +367,14 @@ bool scriptGetProperty(NPObject *npobj, NPIdentifier name, NPVariant *result)
 
 bool scriptSetProperty(NPObject *npobj, NPIdentifier name, const NPVariant *value)
 {
-  DEBUG_LOG(DEBUG_INFO, "scriptSetProperty");
+  DEBUG_LOG(DEBUG_TRACE, "scriptSetProperty");
   
   return true;
 }
 
 bool scriptRemoveProperty(NPObject *npobj, NPIdentifier name)
 {
-  DEBUG_LOG(DEBUG_INFO, "scriptRemoveProperty");
+  DEBUG_LOG(DEBUG_TRACE, "scriptRemoveProperty");
   
   return true;
 }
