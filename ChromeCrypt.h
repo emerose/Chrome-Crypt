@@ -10,9 +10,17 @@
 #include "include/plugin/npruntime.h"
 #include "include/plugin/npfunctions.h"
 
+#define DEBUG_LOGFILE "/tmp/cc.log"
+#define DEBUG_LOG_LEVEL DEBUG_TRACE
+#include "debug.h"
+
 #define PLUGIN_NAME "ChromeCrypt"
 #define PLUGIN_DESC "Encryption thingy for Chrome"
 #define MIME_TYPES_DESCRIPTION "application/x-chromecrypt:ccrypt:Cypto Plugin for Chrome"
+
+#ifndef HIBYTE
+#define HIBYTE(x) ((((uint32)(x)) & 0xff00) >> 8)
+#endif
 
 NPError NP_GetEntryPoints(NPPluginFuncs *pluginFuncs);
 NPError NP_Initialize(NPNetscapeFuncs *browserFuncs);

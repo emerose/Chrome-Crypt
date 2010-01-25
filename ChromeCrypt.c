@@ -8,23 +8,7 @@
 
 #include "ChromeCrypt.h"
 
-#ifndef HIBYTE
-#define HIBYTE(x) ((((uint32)(x)) & 0xff00) >> 8)
-#endif
-
-
 static NPNetscapeFuncs *browser; // we store the browser function table here for future use
-
-void LOG_DEBUG(const char *msg)
-{
-  FILE *file = fopen("/tmp/cc.log", "a+");
-	if (file) {
-		fprintf(file, "%s\n", msg);
-		fclose(file);
-  } else {
-    abort();
-  }
-}
 
 /**
  * Called once (before NP_Initialize?) in order to set up pointers required for
@@ -34,15 +18,15 @@ void LOG_DEBUG(const char *msg)
  */
 NPError NP_GetEntryPoints(NPPluginFuncs* pluginFuncs)
 {
-  LOG_DEBUG("NP_GetEntryPoints");
+  DEBUG_LOG(DEBUG_TRACE, "NP_GetEntryPoints");
  
   if (pluginFuncs== NULL) {
-    LOG_DEBUG("pluginFuncs is NULL!");
+    DEBUG_LOG(DEBUG_CRIT, "pluginFuncs is NULL!");
     return NPERR_INVALID_FUNCTABLE_ERROR;
   }
   
   if (pluginFuncs->size < sizeof(NPPluginFuncs)) {
-    LOG_DEBUG("pluginFuncs has wrong size!");
+    DEBUG_LOG(DEBUG_CRIT, "pluginFuncs has wrong size!");
     return NPERR_INVALID_FUNCTABLE_ERROR;
   }
   
@@ -70,15 +54,15 @@ NPError NP_GetEntryPoints(NPPluginFuncs* pluginFuncs)
  */
 NPError NP_Initialize(NPNetscapeFuncs* browserFuncs)
 {  
-  LOG_DEBUG("NP_Initialize");
+  DEBUG_LOG(DEBUG_TRACE, "NP_Initialize");
 
   if (HIBYTE(browserFuncs->version) > NP_VERSION_MAJOR) {
-    LOG_DEBUG("Wrong API Version!");
+    DEBUG_LOG(DEBUG_CRIT, "Wrong API Version!");
     return NPERR_INCOMPATIBLE_VERSION_ERROR;    
   }
 
   if (browserFuncs->size < sizeof(NPNetscapeFuncs)) {
-    LOG_DEBUG("browserFuncs has wrong size!");
+    DEBUG_LOG(DEBUG_CRIT, "browserFuncs has wrong size!");
     return NPERR_INVALID_FUNCTABLE_ERROR;    
   }
   
@@ -97,7 +81,7 @@ NPError NPP_New(NPMIMEType pluginType, // ptr to MIME type for plugin instance
                 char* argv[],          // EMBED tag attribute values
                 NPSavedData* saved)    // prev saved instance data (?)
 {
-  LOG_DEBUG("NPP_New");
+  DEBUG_LOG(DEBUG_TRACE, "NPP_New");
   
   return NPERR_NO_ERROR;
 }
@@ -109,7 +93,7 @@ NPError NPP_GetValue(NPP instance,
                      NPPVariable variable,
                      void *value)
 {
-  LOG_DEBUG("NPP_GetValue");
+  DEBUG_LOG(DEBUG_TRACE, "NPP_GetValue");
   
   switch(variable) {
     case NPPVpluginNameString:
@@ -140,7 +124,7 @@ NPError NPP_SetValue(NPP instance,         // the instance
                      NPNVariable variable, // the variable to retrieve
                      void *value)          // where to put the value (?)
 {
-  LOG_DEBUG("NPP_SetValue");
+  DEBUG_LOG(DEBUG_TRACE, "NPP_SetValue");
 
   return NPERR_GENERIC_ERROR;
 }
@@ -151,7 +135,7 @@ NPError NPP_SetValue(NPP instance,         // the instance
  */
 NPError NPP_Destroy(NPP instance, NPSavedData** save)
 {
-  LOG_DEBUG("NPP_Destroy");
+  DEBUG_LOG(DEBUG_TRACE, "NPP_Destroy");
   
   return NPERR_NO_ERROR;
 }
@@ -161,7 +145,7 @@ NPError NPP_Destroy(NPP instance, NPSavedData** save)
  */
 void NP_Shutdown(void)
 {
-  LOG_DEBUG("NP_Shutdown");
+  DEBUG_LOG(DEBUG_TRACE, "NP_Shutdown");
   
   return;
 }
@@ -172,7 +156,7 @@ void NP_Shutdown(void)
  */
 char* NP_GetMIMEDescription(void)
 {
-  LOG_DEBUG("NP_GetMIMEDescription");
+  DEBUG_LOG(DEBUG_TRACE, "NP_GetMIMEDescription");
   
   return(MIME_TYPES_DESCRIPTION);
 }
@@ -182,7 +166,7 @@ char* NP_GetMIMEDescription(void)
  */
 NPError NPP_SetWindow(NPP instance, NPWindow *window)
 {
-  LOG_DEBUG("NPP_SetWindow");
+  DEBUG_LOG(DEBUG_TRACE, "NPP_SetWindow");
   
   return NPERR_NO_ERROR;
 }
@@ -196,7 +180,7 @@ NPError NPP_NewStream(NPP        instance,
                       NPBool     seekable,
                       uint16*    stype)
 {
-  LOG_DEBUG("NPP_NewStream");
+  DEBUG_LOG(DEBUG_TRACE, "NPP_NewStream");
   
   return NPERR_NO_ERROR;  
 }
@@ -208,7 +192,7 @@ NPError NPP_DestroyStream(NPP       instance,
                           NPStream* stream, 
                           NPReason  reason)
 {
-  LOG_DEBUG("NPP_DestroyStream");
+  DEBUG_LOG(DEBUG_TRACE, "NPP_DestroyStream");
   
   return NPERR_NO_ERROR;
 }
@@ -220,7 +204,7 @@ void NPP_StreamAsFile(NPP         instance,
                       NPStream*   stream,
                       const char* fname)
 {
-  LOG_DEBUG("NPP_StreamAsFile");
+  DEBUG_LOG(DEBUG_TRACE, "NPP_StreamAsFile");
   
   return;
 }
@@ -230,7 +214,7 @@ void NPP_StreamAsFile(NPP         instance,
  */
 int32_t NPP_WriteReady(NPP instance, NPStream* stream)
 {
-  LOG_DEBUG("NPP_WriteReady");
+  DEBUG_LOG(DEBUG_TRACE, "NPP_WriteReady");
   
   return 0;
 }
@@ -244,7 +228,7 @@ int32_t NPP_Write(NPP instance,
                 int32_t len, 
                 void* buf)
 {
-  LOG_DEBUG("NPP_Write");
+  DEBUG_LOG(DEBUG_TRACE, "NPP_Write");
   
   return len;
 }
@@ -254,7 +238,7 @@ int32_t NPP_Write(NPP instance,
  */
 void NPP_Print(NPP instance, NPPrint* PrintInfo)
 {
-  LOG_DEBUG("NPP_Print");
+  DEBUG_LOG(DEBUG_TRACE, "NPP_Print");
   
   return;
 }
@@ -264,7 +248,7 @@ void NPP_Print(NPP instance, NPPrint* PrintInfo)
  */
 int16_t NPP_HandleEvent(NPP instance, void* event)
 {
-  LOG_DEBUG("NPP_HandleEvent");
+  DEBUG_LOG(DEBUG_TRACE, "NPP_HandleEvent");
   
   return FALSE;
 }
@@ -277,7 +261,7 @@ void NPP_URLNotify(NPP         instance,
                    NPReason    reason, 
                    void*       notifyData)
 {
-  LOG_DEBUG("NPP_URLNotify");
+  DEBUG_LOG(DEBUG_TRACE, "NPP_URLNotify");
   
   return;
 }
@@ -290,7 +274,7 @@ void NPP_URLNotify(NPP         instance,
  */
 NPObject *newScriptObject(NPP instance)
 {
-  LOG_DEBUG("newScriptObject");
+  DEBUG_LOG(DEBUG_INFO, "newScriptObject");
   
     // first, we allocate and zero an NPClass struct
   NPClass *class = malloc(sizeof(NPClass));
@@ -314,7 +298,9 @@ NPObject *newScriptObject(NPP instance)
  */
 bool scriptHasMethod(NPObject *npobj, NPIdentifier name)
 {
-  LOG_DEBUG("scriptHasMethod");
+  DEBUG_LOG(DEBUG_INFO, "scriptHasMethod");
+  
+  
   
   return true; // pretend we have all methods
 }
@@ -329,7 +315,7 @@ bool scriptInvokeMethod(NPObject *npobj,
                         uint32_t argCount,
                         NPVariant *result)
 {
-  LOG_DEBUG("scriptInvokeMethod");
+  DEBUG_LOG(DEBUG_INFO, "scriptInvokeMethod");
   
   STRINGZ_TO_NPVARIANT("HELLO", *result);
   return true;
@@ -340,7 +326,7 @@ bool scriptInvokeDefaultMethod(NPObject *npobj,
                                uint32_t argCount,
                                NPVariant *result)
 {
-  LOG_DEBUG("scriptInvokeDefaultMethod");
+  DEBUG_LOG(DEBUG_INFO, "scriptInvokeDefaultMethod");
   
   STRINGZ_TO_NPVARIANT("HELLO", *result);
   return true;
@@ -348,14 +334,14 @@ bool scriptInvokeDefaultMethod(NPObject *npobj,
 
 bool scriptHasProperty(NPObject *npobj, NPIdentifier name)
 {
-  LOG_DEBUG("scriptHasProperty");
+  DEBUG_LOG(DEBUG_INFO, "scriptHasProperty");
   
   return true;
 }
 
 bool scriptGetProperty(NPObject *npobj, NPIdentifier name, NPVariant *result)
 {
-  LOG_DEBUG("scriptGetProperty");
+  DEBUG_LOG(DEBUG_INFO, "scriptGetProperty");
   
   STRINGZ_TO_NPVARIANT("HELLO", *result);
   return true;
@@ -363,14 +349,14 @@ bool scriptGetProperty(NPObject *npobj, NPIdentifier name, NPVariant *result)
 
 bool scriptSetProperty(NPObject *npobj, NPIdentifier name, const NPVariant *value)
 {
-  LOG_DEBUG("scriptSetProperty");
+  DEBUG_LOG(DEBUG_INFO, "scriptSetProperty");
   
   return true;
 }
 
 bool scriptRemoveProperty(NPObject *npobj, NPIdentifier name)
 {
-  LOG_DEBUG("scriptRemoveProperty");
+  DEBUG_LOG(DEBUG_INFO, "scriptRemoveProperty");
   
   return true;
 }
