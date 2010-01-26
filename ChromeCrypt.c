@@ -303,8 +303,7 @@ NPObject *newScriptObject(NPP instance)
 bool scriptHasMethod(NPObject *npobj, NPIdentifier name)
 {
   DEBUG_TRACE("scriptHasMethod");
-  
-  
+  DEBUG_NPIDENTIFIER(DEBUG_LEVEL_INFO, name);  
   
   return true; // pretend we have all methods
 }
@@ -320,6 +319,7 @@ bool scriptInvokeMethod(NPObject *npobj,
                         NPVariant *result)
 {
   DEBUG_TRACE("scriptInvokeMethod");
+  DEBUG_NPIDENTIFIER(DEBUG_LEVEL_INFO, name);
   
   STRINGZ_TO_NPVARIANT("HELLO", *result);
   return true;
@@ -356,6 +356,7 @@ bool scriptGetProperty(NPObject *npobj, NPIdentifier name, NPVariant *result)
 bool scriptSetProperty(NPObject *npobj, NPIdentifier name, const NPVariant *value)
 {
   DEBUG_TRACE("scriptSetProperty");
+  DEBUG_NPIDENTIFIER(DEBUG_LEVEL_INFO, name);
   
   return true;
 }
@@ -363,6 +364,7 @@ bool scriptSetProperty(NPObject *npobj, NPIdentifier name, const NPVariant *valu
 bool scriptRemoveProperty(NPObject *npobj, NPIdentifier name)
 {
   DEBUG_TRACE("scriptRemoveProperty");
+  DEBUG_NPIDENTIFIER(DEBUG_LEVEL_INFO, name);
   
   return true;
 }
