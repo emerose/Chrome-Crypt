@@ -20,11 +20,14 @@ NPError NP_GetEntryPoints(NPPluginFuncs* pluginFuncs)
 {
   DEBUG_TRACE("NP_GetEntryPoints");
  
-  if (pluginFuncs== NULL) {
+  if (pluginFuncs == NULL) {
     DEBUG_CRIT("pluginFuncs is NULL!");
     return NPERR_INVALID_FUNCTABLE_ERROR;
   }
-  
+
+    // NB: according to the google gears code, Webkit on OSX will pass a 0 for 
+    // size here, apparently expecting us to treat it as an output parameter.
+    // I haven't seen that behavior (yet)...
   if (pluginFuncs->size < sizeof(NPPluginFuncs)) {
     DEBUG_CRIT("pluginFuncs has wrong size!");
     return NPERR_INVALID_FUNCTABLE_ERROR;
@@ -82,8 +85,10 @@ NPError NPP_New(NPMIMEType pluginType, // ptr to MIME type for plugin instance
                 NPSavedData* saved)    // prev saved instance data (?)
 {
   DEBUG_TRACE("NPP_New");
+  if (instance == NULL) return NPERR_INVALID_INSTANCE_ERROR;
   
-  return NPERR_NO_ERROR;
+    // make this a windowless plugin
+  return browser->setvalue(instance, NPPVpluginWindowBool, NULL);
 }
 
 /**
@@ -96,6 +101,7 @@ NPError NPP_GetValue(NPP instance,
   NPObject *scriptObj;
 
   DEBUG_TRACE("NPP_GetValue");
+  if (instance == NULL) return NPERR_INVALID_INSTANCE_ERROR;
   
   switch(variable) {
     case NPPVpluginNameString:
@@ -129,6 +135,7 @@ NPError NPP_SetValue(NPP instance,         // the instance
                      void *value)          // where to put the value (?)
 {
   DEBUG_TRACE("NPP_SetValue");
+  if (instance == NULL) return NPERR_INVALID_INSTANCE_ERROR;
 
   return NPERR_GENERIC_ERROR;
 }
@@ -140,6 +147,7 @@ NPError NPP_SetValue(NPP instance,         // the instance
 NPError NPP_Destroy(NPP instance, NPSavedData** save)
 {
   DEBUG_TRACE("NPP_Destroy");
+  if (instance == NULL) return NPERR_INVALID_INSTANCE_ERROR;
   
   return NPERR_NO_ERROR;
 }
@@ -171,6 +179,7 @@ char* NP_GetMIMEDescription(void)
 NPError NPP_SetWindow(NPP instance, NPWindow *window)
 {
   DEBUG_TRACE("NPP_SetWindow");
+  if (instance == NULL) return NPERR_INVALID_INSTANCE_ERROR;
   
   return NPERR_NO_ERROR;
 }
@@ -185,6 +194,7 @@ NPError NPP_NewStream(NPP        instance,
                       uint16*    stype)
 {
   DEBUG_TRACE("NPP_NewStream");
+  if (instance == NULL) return NPERR_INVALID_INSTANCE_ERROR;
   
   return NPERR_NO_ERROR;  
 }
@@ -197,6 +207,7 @@ NPError NPP_DestroyStream(NPP       instance,
                           NPReason  reason)
 {
   DEBUG_TRACE("NPP_DestroyStream");
+  if (instance == NULL) return NPERR_INVALID_INSTANCE_ERROR;
   
   return NPERR_NO_ERROR;
 }
@@ -209,6 +220,7 @@ void NPP_StreamAsFile(NPP         instance,
                       const char* fname)
 {
   DEBUG_TRACE("NPP_StreamAsFile");
+  if (instance == NULL) return;
   
   return;
 }
@@ -219,8 +231,10 @@ void NPP_StreamAsFile(NPP         instance,
 int32_t NPP_WriteReady(NPP instance, NPStream* stream)
 {
   DEBUG_TRACE("NPP_WriteReady");
+  if (instance == NULL) return NPERR_INVALID_INSTANCE_ERROR;
   
-  return 0;
+    // report that we're ready to consume quite a few bytes
+  return 0x0fffffff;
 }
 
 /**
@@ -233,6 +247,7 @@ int32_t NPP_Write(NPP instance,
                 void* buf)
 {
   DEBUG_TRACE("NPP_Write");
+  if (instance == NULL) return NPERR_INVALID_INSTANCE_ERROR;
   
   return len;
 }
@@ -243,6 +258,7 @@ int32_t NPP_Write(NPP instance,
 void NPP_Print(NPP instance, NPPrint* PrintInfo)
 {
   DEBUG_TRACE("NPP_Print");
+  if (instance == NULL) return;
   
   return;
 }
@@ -253,6 +269,7 @@ void NPP_Print(NPP instance, NPPrint* PrintInfo)
 int16_t NPP_HandleEvent(NPP instance, void* event)
 {
   DEBUG_TRACE("NPP_HandleEvent");
+  if (instance == NULL) return NPERR_INVALID_INSTANCE_ERROR;
   
   return FALSE;
 }
@@ -266,6 +283,7 @@ void NPP_URLNotify(NPP         instance,
                    void*       notifyData)
 {
   DEBUG_TRACE("NPP_URLNotify");
+  if (instance == NULL) return;
   
   return;
 }
@@ -279,6 +297,7 @@ void NPP_URLNotify(NPP         instance,
 NPObject *newScriptObject(NPP instance)
 {
   DEBUG_TRACE("newScriptObject");
+  assert(instance);
   
     // first, we allocate and zero an NPClass struct
   NPClass *class = malloc(sizeof(NPClass));
