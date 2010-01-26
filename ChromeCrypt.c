@@ -93,6 +93,8 @@ NPError NPP_GetValue(NPP instance,
                      NPPVariable variable,
                      void *value)
 {
+  NPObject *scriptObj;
+
   DEBUG_TRACE("NPP_GetValue");
   
   switch(variable) {
@@ -105,7 +107,9 @@ NPError NPP_GetValue(NPP instance,
       return NPERR_NO_ERROR;
 
     case NPPVpluginScriptableNPObject:// Scriptable plugin interface (for accessing from javascript)
-      *((NPObject **)value) = newScriptObject(instance);
+      scriptObj = newScriptObject(instance);
+      *((NPObject **)value) = scriptObj;
+      browser->retainobject(scriptObj);  // caller expects it retained.
       return NPERR_NO_ERROR;
 
     case NPPVpluginWindowBool:
