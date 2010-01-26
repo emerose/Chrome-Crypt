@@ -11,8 +11,19 @@
 #include "include/plugin/npfunctions.h"
 
 #define DEBUG_LOGFILE "/tmp/cc.log"
-#define DEBUG_LOG_LEVEL DEBUG_TRACE
+#define DEBUG_LOG_LEVEL DEBUG_LEVEL_TRACE
 #include "debug.h"
+
+#define DEBUG_NPIDENTIFIER(level, name)\
+  if (level > DEBUG_LOG_LEVEL) {\
+    if (browser->identifierisstring(name)) {\
+      char *name_string = browser->utf8fromidentifier(name);\
+      DEBUG_LOG_FMT(level, "'" #name "' is: '%s'", name_string);\
+      browser->memfree(name_string);\
+    } else {\
+      DEBUG_INFO("'" #name "' is not a string");\
+    }\
+  }
 
 #define PLUGIN_NAME "ChromeCrypt"
 #define PLUGIN_DESC "Encryption thingy for Chrome"
