@@ -348,6 +348,7 @@ bool scriptInvokeMethod(NPObject *npobj,
   DEBUG_NPIDENTIFIER(DEBUG_LEVEL_INFO, name);
   
   STRINGZ_TO_NPVARIANT("HELLO", *result);
+  DEBUG_NPVARIANT(DEBUG_LEVEL_INFO, *result);
   return true;
 }
 
@@ -359,6 +360,7 @@ bool scriptInvokeDefaultMethod(NPObject *npobj,
   DEBUG_TRACE("scriptInvokeDefaultMethod");
   
   STRINGZ_TO_NPVARIANT("HELLO", *result);
+  DEBUG_NPVARIANT(DEBUG_LEVEL_INFO, *result);
   return true;
 }
 
@@ -376,6 +378,7 @@ bool scriptGetProperty(NPObject *npobj, NPIdentifier name, NPVariant *result)
   DEBUG_NPIDENTIFIER(DEBUG_LEVEL_INFO, name);
   
   STRINGZ_TO_NPVARIANT("HELLO", *result);
+  DEBUG_NPVARIANT(DEBUG_LEVEL_INFO, *result);
   return true;
 }
 

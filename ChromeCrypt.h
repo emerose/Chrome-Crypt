@@ -25,6 +25,32 @@
     }\
   }
 
+#define DEBUG_NPVARIANT(level, var)\
+  if (level >= DEBUG_LOG_LEVEL) {\
+    if (NPVARIANT_IS_STRING(var)) {\
+      DEBUG_LOG_FMT(level, "'%s' is '%s'", #var, NPVARIANT_TO_STRING(var));\
+    } else if (NPVARIANT_IS_VOID(var)) {\
+      DEBUG_LOG_FMT(level, "'%s' is void", #var);\
+    } else if (NPVARIANT_IS_NULL(var)) {\
+      DEBUG_LOG_FMT(level, "'%s' is NULL", #var);\
+    } else if (NPVARIANT_IS_INT32(var)) {\
+      DEBUG_LOG_FMT(level, "'%s' is %d", #var, NPVARIANT_TO_INT32(var));\
+    } else if (NPVARIANT_IS_DOUBLE(var)) {\
+      DEBUG_LOG_FMT(level, "'%s' is %f", #var, NPVARIANT_TO_DOUBLE(var));\
+    } else if (NPVARIANT_IS_BOOLEAN(var)) {\
+      if (NPVARIANT_TO_BOOLEAN(var)) {\
+        DEBUG_LOG_FMT(level, "'%s' is TRUE", #var);\
+      } else {\
+        DEBUG_LOG_FMT(level, "'%s' is FALSE", #var);\
+      }\
+    } else if (NPVARIANT_IS_OBJECT(var)) {\
+      DEBUG_LOG_FMT(level, "'%s' is an object", #var);\
+    } else {\
+      DEBUG_LOG_FMT(level, "'%s' has unsupported type", #var);\
+    }\
+  }
+
+
 #define PLUGIN_NAME "ChromeCrypt"
 #define PLUGIN_DESC "Encryption thingy for Chrome"
 #define MIME_TYPES_DESCRIPTION "application/x-chromecrypt:ccrypt:Cypto Plugin for Chrome"
