@@ -18,10 +18,10 @@
   if (level >= DEBUG_LOG_LEVEL) {\
     if (browser->identifierisstring(name)) {\
       char *name_string = browser->utf8fromidentifier(name);\
-      DEBUG_LOG_FMT(level, "'" #name "' is: '%s'", name_string);\
+      DEBUG_LOG_FMT(level, "'%s' is: '%s'", #name, name_string);\
       browser->memfree(name_string);\
     } else {\
-      DEBUG_INFO("'" #name "' is not a string");\
+      DEBUG_LOG_FMT(level, "'%s' is: %d", #name, browser->intfromidentifier(name));\
     }\
   }
 
