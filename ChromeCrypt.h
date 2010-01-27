@@ -11,11 +11,11 @@
 #include "include/plugin/npfunctions.h"
 
 #define DEBUG_LOGFILE "/tmp/cc.log"
-#define DEBUG_LOG_LEVEL DEBUG_LEVEL_TRACE
+#define DEBUG_LOG_LEVEL DEBUG_LEVEL_INFO
 #include "debug.h"
 
 #define DEBUG_NPIDENTIFIER(level, name)\
-  if (level > DEBUG_LOG_LEVEL) {\
+  if (level >= DEBUG_LOG_LEVEL) {\
     if (browser->identifierisstring(name)) {\
       char *name_string = browser->utf8fromidentifier(name);\
       DEBUG_LOG_FMT(level, "'" #name "' is: '%s'", name_string);\

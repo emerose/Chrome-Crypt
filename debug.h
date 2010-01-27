@@ -29,7 +29,7 @@ enum DEBUG_LEVELS {
 
 #ifndef NDEBUG
   #define DEBUG_LOG_FMT(lvl, msg, ...) do {\
-    if (lvl > DEBUG_LOG_LEVEL) {\
+    if (lvl >= DEBUG_LOG_LEVEL) {\
       debug_write_message(__FILE__, __LINE__, __func__, #lvl, msg, ##__VA_ARGS__);\
     }\
   } while (0)
