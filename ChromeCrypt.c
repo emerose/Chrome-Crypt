@@ -335,7 +335,7 @@ bool scriptHasMethod(NPObject *npobj, NPIdentifier name)
 }
 
 /**
- * invoke method +name+ on +npobh+ with +argCount+ arguments specified
+ * invoke method +name+ on +npobj+ with +argCount+ arguments specified
  * in array +args+; return the result in +result+
  */
 bool scriptInvokeMethod(NPObject *npobj,
