@@ -305,13 +305,20 @@ NPObject *newScriptObject(NPP instance)
   
     // now, we fill it in with the right function pointers
   class->structVersion  = NP_CLASS_STRUCT_VERSION;
+    // use malloc/free
+  class->allocate       = NULL;
+  class->deallocate     = NULL;
+  class->invalidate     = NULL;
+    // scripty bits:
   class->hasMethod      = scriptHasMethod;
   class->invoke         = scriptInvokeMethod;
   class->invokeDefault  = scriptInvokeDefaultMethod;
+  class->invokeDefault  = NULL;
   class->hasProperty    = scriptHasProperty;
   class->getProperty    = scriptGetProperty;
   class->setProperty    = scriptSetProperty;
   class->removeProperty = scriptRemoveProperty;
+  class->removeProperty = NULL;
   
   return browser->createobject(instance, class);
 }
